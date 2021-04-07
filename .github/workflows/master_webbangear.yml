@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - webbangear
+name: Build and deploy JAR app to Azure Web App - webbangear
 
 on:
   push:
@@ -15,16 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
+    - name: Set up Java version
+      uses: actions/setup-java@v1
       with:
-        dotnet-version: '5.0.x'
+        java-version: '8'
 
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+    - name: Build with Maven
+      run: mvn clean install
 
     - name: Deploy to Azure Web App
 id: deploy-to-webapp
@@ -32,5 +29,5 @@ id: deploy-to-webapp
       with:
         app-name: 'webbangear'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_f988c26b722648aebcf88ea2ca8fa507 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8032acfa36c64c0b8b0b3ad18de492e2 }}
+        package: '${{ github.workspace }}/target/*.jar'
